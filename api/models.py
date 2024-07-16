@@ -31,3 +31,23 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
         
         return self.create_user(email, first_name, last_name, password=password, **extra_fields) 
+
+class User(AbstractUser):
+    profile_picture=CloudinaryField("image")
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=30)
+    department = models.CharField(max_length=30)
+    ROLE_CHOICES = (
+        ("admin", "Admin"),
+        ("employee", "Employee"),
+        ("superadmin", "SuperAdmin"),
+    )
+    role = models.CharField(max_length=30, choices=ROLE_CHOICES, default='employee')
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number', 'department', 'role']
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
