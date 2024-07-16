@@ -219,3 +219,49 @@ class RequestListView(APIView):
         requests = Request.objects.all()
         serializer = RequestSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+#request action(accept or deny)
+class RequestActionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, request_id):
+        user = request.user
+        if user.role not in ['admin', 'superadmin']:
+            return Response(
+                {'error': 'Only admins or superadmins can approve or reject requests.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        request_instance = get_object_or_404(Request, id=request_id)
+        action = request.data.get('action')  # 'approve' or 'reject'
+
+        if action == 'approve':
+            request_instance.status = 'approved'
+            request_instance.save()
+
+            # Assuming you want to set asset status to False upon approval
+            request_instance.asset.status = False
+            request_instance.asset.save()
+
+            return Response(
+                {'success': 'Request approved successfully.'},
+                status=status.HTTP_200_OK
+            )
+
+        elif action == 'reject':
+            request_instance.status = 'rejected'
+            request_instance.save()
+
+            # Set asset status back to True upon rejection
+            request_instance.asset.status =True
+            request_instance.asset.save()
+
+            return Response(
+                {'success': 'Request rejected successfully.'},
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            {'error': 'Invalid action. Use "approve" or "reject".'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
