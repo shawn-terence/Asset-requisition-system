@@ -63,3 +63,13 @@ class Asset(models.Model):
     status=models.BooleanField(default=True)
     #created_at=models.DateTimeField(auto_now_add=True)
     asset_type=models.CharField(max_length=30)
+
+class Request(models.Model):
+    STATUS_CHOICES = (
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+        ("rejected", "Rejected"),
+    )
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name="requests")
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, related_name="requests")
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default="pending")
