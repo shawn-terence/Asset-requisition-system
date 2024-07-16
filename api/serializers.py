@@ -12,3 +12,11 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+#asset serializer
+class AssetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Asset
+        fields = ['name','description','category','serial_number','tag','status','asset_type' ]
+    def create(self,validated_data):
+        asset = Asset.objects.create(**validated_data)
+        return asset
