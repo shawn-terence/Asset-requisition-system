@@ -153,3 +153,20 @@ class DeleteUserView(APIView):
             {'success': 'User deleted successfully.'},
             status=status.HTTP_200_OK
         )
+    """                                     ASSET VIEWS                                                                     """
+    #Add asset
+class AssetAddView(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self, request):
+        serializer = AssetSerializer(data=request.data)
+        user=request.user
+        if user.role=="employee":
+            return Response(
+                {'error': 'You are not authorized to add assets'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
