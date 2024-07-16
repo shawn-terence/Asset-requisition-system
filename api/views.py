@@ -49,3 +49,9 @@ class UserLoginView(ObtainAuthToken):
                 {'error': 'Invalid email and/or password'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
+#User list
+class AllUsersView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
