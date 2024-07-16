@@ -170,3 +170,46 @@ class AssetAddView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#get all assets
+class AssetListView(APIView):
+    def get(self, request):
+
+        assets = Asset.objects.all()
+        serializer = AssetSerializer(assets, many=True)
+        return Response(serializer.data)
+#Update asset status
+#request for asset
+class AssetUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, asset_id):
+        user = request.user
+        if user.role != 'employee':
+            return Response(
+                {'error': 'Only employees can request an asset.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        asset = get_object_or_404(Asset, id=asset_id)
+
+        if not asset.status:
+            return Response(
+                {'error': 'Asset is already requested or not available.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Change the asset status to False (requested)
+        asset.status = False
+        asset.save()
+
+        # Log the request in the Request table
+        request_log = Request.objects.create(
+            asset=asset,
+            employee=user,
+            status="pending"
+        )
+
+        return Response(
+            {'success': 'Asset requested successfully and logged.'},
+            status=status.HTTP_200_OK
+        )
