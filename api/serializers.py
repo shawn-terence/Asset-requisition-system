@@ -20,3 +20,13 @@ class AssetSerializer(serializers.ModelSerializer):
     def create(self,validated_data):
         asset = Asset.objects.create(**validated_data)
         return asset
+#request serializer
+class RequestSerializer(serializers.ModelSerializer):
+    asset = AssetSerializer()
+    employee = UserSerializer()
+    class Meta:
+        model = Request
+        fields = ['id', 'asset', 'employee', 'status']
+    def create(self,validated_data):
+        request = Request.objects.create(**validated_data)
+        return request
