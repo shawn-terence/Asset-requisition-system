@@ -51,3 +51,15 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class Asset(models.Model):
+    image=CloudinaryField('image')
+    name=models.CharField(max_length=30)
+    description=models.TextField()
+    category=models.CharField(max_length=30)
+    serial_number=models.CharField(max_length=100)
+    tag=models.CharField(max_length=50)
+    status=models.BooleanField(default=True)
+    #created_at=models.DateTimeField(auto_now_add=True)
+    asset_type=models.CharField(max_length=30)
