@@ -177,7 +177,6 @@ class AssetListView(APIView):
         assets = Asset.objects.all()
         serializer = AssetSerializer(assets, many=True)
         return Response(serializer.data)
-#Update asset status
 #request for asset
 class AssetUpdateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -213,3 +212,10 @@ class AssetUpdateView(APIView):
             {'success': 'Asset requested successfully and logged.'},
             status=status.HTTP_200_OK
         )
+"""                                             REQUEST VIEWS"""
+#request list
+class RequestListView(APIView):
+    def get(self, request):
+        requests = Request.objects.all()
+        serializer = RequestSerializer(requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
