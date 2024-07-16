@@ -80,7 +80,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.wsgi.application"
-
+cloudinary.config(
+    cloud_name="dvmcqb2iu",
+    api_key="918842645195638",
+    api_secret="GHtBhtTU3jXVexzhAwqKFu-bVhs",
+)
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
