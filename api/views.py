@@ -72,3 +72,84 @@ class UserUpdatePasswordView(APIView):
         user.save()
         
         return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
+#Admin change employee role
+class ChangeUserRoleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if request.user.role not in ['admin', 'superadmin']:
+            return Response(
+                {'error': 'You are not authorized to change user roles.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        email = request.data.get('email')
+        new_role = request.data.get('new_role')
+
+        if not email or not new_role:
+            return Response(
+                {'error': 'Email and new role are required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if new_role not in ['admin', 'employee', 'superadmin']:
+            return Response(
+                {'error': 'Invalid role specified.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        user.role = new_role
+        user.save()
+
+        return Response(
+            {'success': f'User role updated to {new_role}.'},
+            status=status.HTTP_200_OK
+        )
+#delete a user from the database
+class DeleteUserView(APIView):
+    # Only authenticated users can access this view
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        # Check if the current user has the admin or superadmin role
+        if request.user.role not in ['admin', 'superadmin']:
+            return Response(
+                {'error': 'You are not authorized to delete users.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Get the email from the request data
+        email = request.data.get('email')
+
+        # Check if email is provided
+        if not email:
+            return Response(
+                {'error': 'Email is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Try to find the user with the provided email
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Delete the user
+        user.delete()
+
+        # Return a success response
+        return Response(
+            {'success': 'User deleted successfully.'},
+            status=status.HTTP_200_OK
+        )
