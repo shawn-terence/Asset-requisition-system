@@ -23,3 +23,29 @@ class UserRegistrationView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#User log in view
+class UserLoginView(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(request, email=email, password=password)
+        
+        if user is not None:
+            login(request, user)
+            token, created = Token.objects.get_or_create(user=user)
+            if not created:
+                token.delete()
+                token = Token.objects.create(user=user)
+                
+            response_data = {
+                'message': 'User logged in successfully',
+                'email': user.email,
+                'token': token.key
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {'error': 'Invalid email and/or password'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
