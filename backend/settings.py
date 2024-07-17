@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-yw5(*-xvw!mpp@_o=2h8-(y-=i1q+4$*5ydf73tx(xc_1c7wch"
 DEBUG = True
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = "api.User"
 
@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "api",
     "cloudinary",
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
