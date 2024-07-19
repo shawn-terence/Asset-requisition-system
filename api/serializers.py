@@ -6,7 +6,7 @@ from .models import User,Asset,Request
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields=['first_name','last_name', 'phone_number', 'department', 'role','password','email']
+        fields=['id','first_name','last_name', 'phone_number', 'department', 'role','password','email']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AssetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asset
-        fields = ['name','description','category','serial_number','tag','status','asset_type' ]
+        fields = ['id','name','description','category','serial_number','tag','status','asset_type' ]
     def create(self,validated_data):
         asset = Asset.objects.create(**validated_data)
         return asset
