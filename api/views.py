@@ -40,8 +40,12 @@ class UserLoginView(ObtainAuthToken):
                 
             response_data = {
                 'message': 'User logged in successfully',
+                'first_name':user.first_name,
+                'last_name':user.last_name,
                 'email': user.email,
-                'token': token.key
+                'token': token.key,
+                'phone number': user.phone_number,
+                'role':user.role
             }
             return Response(response_data, status=status.HTTP_200_OK)
         else:
