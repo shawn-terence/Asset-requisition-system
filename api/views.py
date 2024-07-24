@@ -44,7 +44,7 @@ class UserLoginView(ObtainAuthToken):
                 'last_name':user.last_name,
                 'email': user.email,
                 'token': token.key,
-                'phone number': user.phone_number,
+                'phone': user.phone_number,
                 'role':user.role
             }
             return Response(response_data, status=status.HTTP_200_OK)
