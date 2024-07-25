@@ -10,6 +10,7 @@ urlpatterns = [
     path("user/login/",UserLoginView.as_view(),name="login"),
     path("assets/add/",AssetAddView.as_view(),name="add_asset"),
     path("user/updatepassword/",UserUpdatePasswordView.as_view(),name="update_password"),
+    path("user/userdetails/",UserDetailView.as_view(),name="user_details"),
     path("user/changeRole/",ChangeUserRoleView.as_view(),name="change role"),
     path("user/deleteUser/",DeleteUserView.as_view(),name="delete user"),
     path("user/allusers/",AllUsersView.as_view(),name="get all users"),

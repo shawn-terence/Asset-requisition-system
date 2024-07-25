@@ -30,14 +30,12 @@ class UserLoginView(ObtainAuthToken):
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)
-        
         if user is not None:
             login(request, user)
             token, created = Token.objects.get_or_create(user=user)
             if not created:
                 token.delete()
                 token = Token.objects.create(user=user)
-                
             response_data = {
                 'message': 'User logged in successfully',
                 'first_name':user.first_name,
@@ -53,6 +51,13 @@ class UserLoginView(ObtainAuthToken):
                 {'error': 'Invalid email and/or password'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
+#uSER dETAILS
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 #User list
 class AllUsersView(APIView):
     def get(self, request):
