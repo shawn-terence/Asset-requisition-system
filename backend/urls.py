@@ -5,7 +5,6 @@ from django.urls import path
 from api.views import*
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path("user/register/", UserRegistrationView.as_view(), name="register"),
     path("user/login/",UserLoginView.as_view(),name="login"),
     path("assets/add/",AssetAddView.as_view(),name="add_asset"),
