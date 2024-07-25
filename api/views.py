@@ -15,7 +15,9 @@ from django.shortcuts import get_object_or_404
 User = get_user_model()
 # Create your views here.
 """                                     USER VIEWS                                                                      """
-#user registration
+
+
+# user registration
 class UserRegistrationView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -24,11 +26,12 @@ class UserRegistrationView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#User log in view
+
+# User log in view
 class UserLoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        password = request.data.get('password')
+        email = request.data.get("email")
+        password = request.data.get("password")
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
@@ -37,112 +40,125 @@ class UserLoginView(ObtainAuthToken):
                 token.delete()
                 token = Token.objects.create(user=user)
             response_data = {
-                'message': 'User logged in successfully',
-                'first_name':user.first_name,
-                'last_name':user.last_name,
-                'email': user.email,
-                'token': token.key,
-                'phone': user.phone_number,
-                'role':user.role
+                "message": "User logged in successfully",
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "token": token.key,
+                "phone": user.phone_number,
+                "role": user.role,
             }
             return Response(response_data, status=status.HTTP_200_OK)
         else:
             return Response(
-                {'error': 'Invalid email and/or password'},
-                status=status.HTTP_401_UNAUTHORIZED
+                {"error": "Invalid email and/or password"},
+                status=status.HTTP_401_UNAUTHORIZED,
             )
-#uSER dETAILS
+
+
+# uSER dETAILS
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         user = request.user
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
-#User list
+
+
+# User list
 class AllUsersView(APIView):
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-#User update password
+
+# User update password
 class UserUpdatePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
         user = request.user
-        current_password = request.data.get('current_password')
-        new_password = request.data.get('new_password')
+        current_password = request.data.get("current_password")
+        new_password = request.data.get("new_password")
         if not check_password(current_password, user.password):
-            return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST
+            )
         if len(new_password) < 8:
-            return Response({'error': 'New password must be at least 8 characters long'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "New password must be at least 8 characters long"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         user.set_password(new_password)
         user.save()
-        
-        return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
-#Admin change employee role
+
+        return Response(
+            {"message": "Password updated successfully"}, status=status.HTTP_200_OK
+        )
+
+
+# Admin change employee role
 class ChangeUserRoleView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        if request.user.role not in ['admin', 'superadmin']:
+        if request.user.role not in ["admin", "superadmin"]:
             return Response(
-                {'error': 'You are not authorized to change user roles.'},
-                status=status.HTTP_403_FORBIDDEN
+                {"error": "You are not authorized to change user roles."},
+                status=status.HTTP_403_FORBIDDEN,
             )
 
-        email = request.data.get('email')
-        new_role = request.data.get('new_role')
+        email = request.data.get("email")
+        new_role = request.data.get("new_role")
 
         if not email or not new_role:
             return Response(
-                {'error': 'Email and new role are required.'},
-                status=status.HTTP_400_BAD_REQUEST
+                {"error": "Email and new role are required."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if new_role not in ['admin', 'employee', 'superadmin']:
+        if new_role not in ["admin", "employee", "superadmin"]:
             return Response(
-                {'error': 'Invalid role specified.'},
-                status=status.HTTP_400_BAD_REQUEST
+                {"error": "Invalid role specified."}, status=status.HTTP_400_BAD_REQUEST
             )
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return Response(
-                {'error': 'User not found.'},
-                status=status.HTTP_404_NOT_FOUND
+                {"error": "User not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
         user.role = new_role
         user.save()
 
         return Response(
-            {'success': f'User role updated to {new_role}.'},
-            status=status.HTTP_200_OK
+            {"success": f"User role updated to {new_role}."}, status=status.HTTP_200_OK
         )
-#delete a user from the database
+
+
+# delete a user from the database
 class DeleteUserView(APIView):
     # Only authenticated users can access this view
     permission_classes = [IsAuthenticated]
 
     def delete(self, request):
         # Check if the current user has the admin or superadmin role
-        if request.user.role not in ['admin', 'superadmin']:
+        if request.user.role not in ["admin", "superadmin"]:
             return Response(
-                {'error': 'You are not authorized to delete users.'},
-                status=status.HTTP_403_FORBIDDEN
+                {"error": "You are not authorized to delete users."},
+                status=status.HTTP_403_FORBIDDEN,
             )
 
         # Get the email from the request data
-        email = request.data.get('email')
+        email = request.data.get("email")
 
         # Check if email is provided
         if not email:
             return Response(
-                {'error': 'Email is required.'},
-                status=status.HTTP_400_BAD_REQUEST
+                {"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST
             )
 
         # Try to find the user with the provided email
@@ -150,8 +166,7 @@ class DeleteUserView(APIView):
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return Response(
-                {'error': 'User not found.'},
-                status=status.HTTP_404_NOT_FOUND
+                {"error": "User not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
         # Delete the user
@@ -159,51 +174,58 @@ class DeleteUserView(APIView):
 
         # Return a success response
         return Response(
-            {'success': 'User deleted successfully.'},
-            status=status.HTTP_200_OK
+            {"success": "User deleted successfully."}, status=status.HTTP_200_OK
         )
+
     """                                     ASSET VIEWS                                                                     """
-    #Add asset
+    # Add asset
+
+
 class AssetAddView(APIView):
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = AssetSerializer(data=request.data)
-        user=request.user
-        if user.role=="employee":
+        user = request.user
+        if user.role == "employee":
             return Response(
-                {'error': 'You are not authorized to add assets'},
-                status=status.HTTP_401_UNAUTHORIZED
+                {"error": "You are not authorized to add assets"},
+                status=status.HTTP_401_UNAUTHORIZED,
             )
 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#get all assets
+
+
+# get all assets
 class AssetListView(APIView):
     def get(self, request):
 
         assets = Asset.objects.all()
         serializer = AssetSerializer(assets, many=True)
         return Response(serializer.data)
-#request for asset
+
+
+# request for asset
 class AssetUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, asset_id):
         user = request.user
-        if user.role != 'employee':
+        if user.role != "employee":
             return Response(
-                {'error': 'Only employees can request an asset.'},
-                status=status.HTTP_403_FORBIDDEN
+                {"error": "Only employees can request an asset."},
+                status=status.HTTP_403_FORBIDDEN,
             )
 
         asset = get_object_or_404(Asset, id=asset_id)
 
         if not asset.status:
             return Response(
-                {'error': 'Asset is already requested or not available.'},
-                status=status.HTTP_400_BAD_REQUEST
+                {"error": "Asset is already requested or not available."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         # Change the asset status to False (requested)
@@ -212,40 +234,43 @@ class AssetUpdateView(APIView):
 
         # Log the request in the Request table
         request_log = Request.objects.create(
-            asset=asset,
-            employee=user,
-            status="pending"
+            asset=asset, employee=user, status="pending"
         )
 
         return Response(
-            {'success': 'Asset requested successfully and logged.'},
-            status=status.HTTP_200_OK
+            {"success": "Asset requested successfully and logged."},
+            status=status.HTTP_200_OK,
         )
+
+
 """                                             REQUEST VIEWS"""
-#request list
+
+
+# request list
 class RequestListView(APIView):
     def get(self, request):
         requests = Request.objects.all()
         serializer = RequestSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-#request action(accept or deny)
+
+# request action(accept or deny)
 class RequestActionView(APIView):
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, request_id):
         user = request.user
-        if user.role not in ['admin', 'superadmin']:
+        if user.role not in ["admin", "superadmin"]:
             return Response(
-                {'error': 'Only admins or superadmins can approve or reject requests.'},
-                status=status.HTTP_403_FORBIDDEN
+                {"error": "Only admins or superadmins can approve or reject requests."},
+                status=status.HTTP_403_FORBIDDEN,
             )
 
         request_instance = get_object_or_404(Request, id=request_id)
-        action = request.data.get('action')  # 'approve' or 'reject'
+        action = request.data.get("action")  # 'approve' or 'reject'
 
-        if action == 'approve':
-            request_instance.status = 'approved'
+        if action == "approve":
+            request_instance.status = "approved"
             request_instance.save()
 
             # Assuming you want to set asset status to False upon approval
@@ -253,24 +278,22 @@ class RequestActionView(APIView):
             request_instance.asset.save()
 
             return Response(
-                {'success': 'Request approved successfully.'},
-                status=status.HTTP_200_OK
+                {"success": "Request approved successfully."}, status=status.HTTP_200_OK
             )
 
-        elif action == 'reject':
-            request_instance.status = 'rejected'
+        elif action == "reject":
+            request_instance.status = "rejected"
             request_instance.save()
 
             # Set asset status back to True upon rejection
-            request_instance.asset.status =True
+            request_instance.asset.status = True
             request_instance.asset.save()
 
             return Response(
-                {'success': 'Request rejected successfully.'},
-                status=status.HTTP_200_OK
+                {"success": "Request rejected successfully."}, status=status.HTTP_200_OK
             )
 
         return Response(
-            {'error': 'Invalid action. Use "approve" or "reject".'},
-            status=status.HTTP_400_BAD_REQUEST
+            {"error": 'Invalid action. Use "approve" or "reject".'},
+            status=status.HTTP_400_BAD_REQUEST,
         )
