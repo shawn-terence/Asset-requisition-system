@@ -80,18 +80,18 @@ class UserUpdatePasswordView(APIView):
 
     def put(self, request):
         user = request.user
-        current_password = request.data.get("current_password")
-        new_password = request.data.get("new_password")
+        # current_password = request.data.get("current_password")
+        password = request.data.get("password")
         # if not check_password(current_password, user.password):
         #     return Response(
         #         {"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST
         #     )
-        if len(new_password) < 8:
+        if len(password) < 8:
             return Response(
                 {"error": "New password must be at least 8 characters long"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        user.set_password(new_password)
+        user.set_password(password)
         user.save()
 
         return Response(
