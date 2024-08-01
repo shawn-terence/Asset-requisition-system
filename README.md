@@ -141,7 +141,6 @@ data.
 data.
 
 ### Views
-[Details about views]
 #### User Views
 
 - `UserRegistrationView`: Handles user registration by validating and saving user data. No authentication required.
@@ -150,14 +149,14 @@ data.
 - `AllUsersView`: Retrieves a list of all users. No authentication required.
 - `UserUpdatePasswordView`: Allows the authenticated user to update their password. Requires the user to be authenticated (IsAuthenticated).
 - `ChangeUserRoleView`: Allows an admin or superadmin to change a user's role. Requires the user to be authenticated (IsAuthenticated) and have an admin or superadmin role.
-- `DeleteUserView`: Allows an admin or superadmin to delete a user. Requires the user to be authenticated (IsAuthenticated) and have an admin or superadmin role.
+- `DeleteUserView`: Allows an admin or superadmin to delete a user. Requires the user to be authenticated (IsAuthenticated) and have a superadmin role.
 
 #### Asset Views
 
 - `AssetAddView`: Allows authenticated users (excluding employees) to add new assets. Requires the user to be authenticated (IsAuthenticated).
 - `AssetListView`: Retrieves a list of all assets. No authentication required.
 - `AssetUpdateView`: Allows authenticated employees to request an asset by ID. Changes the asset status to requested and logs the request. Requires the user to be authenticated (IsAuthenticated).
-
+- `AssetDeleteView` : Allows superadmins the ability to remove an asset.
 #### Request Views
 
 - `RequestListView`: Retrieves a list of all asset requests. No authentication required.
