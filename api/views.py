@@ -300,3 +300,14 @@ class RequestActionView(APIView):
             {"error": 'Invalid action. Use "approve" or "reject".'},
             status=status.HTTP_400_BAD_REQUEST,
         )
+# employee request list
+class EmployeeRequestListView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        
+        employee_id=user.id
+        
+        user_request=get_object_or_404(Request,employee=employee_id)
+        serializer=RequestSerializer(user_request)
+        return Response(serializer.data,status=status.HTTP_200_OK)

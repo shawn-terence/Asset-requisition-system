@@ -24,4 +24,5 @@ urlpatterns = [
     path(
         "requests/<int:request_id>/", RequestActionView.as_view(), name="request_action"
     ),
+    path("requests/user/", EmployeeRequestListView.as_view(), name="delete"),
 ]
