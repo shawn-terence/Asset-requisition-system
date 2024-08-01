@@ -241,8 +241,9 @@ class AssetDeleteView(APIView):
                 {"error": "You are not authorized to remove assets."},
                 status=status.HTTP_403_FORBIDDEN,
             )
-            asset = get_object_or_404(Asset, id=asset_id)
-            asset.delete()
+        asset = get_object_or_404(Asset, id=asset_id)
+        asset.delete()
+        return Response({"success": "Asset deleted successfully."}, status=status.HTTP_200_OK)
 
 
 """                                             REQUEST VIEWS"""
