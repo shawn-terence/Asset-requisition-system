@@ -144,26 +144,17 @@ class DeleteUserView(APIView):
     # Only authenticated users can access this view
     permission_classes = [IsAuthenticated]
 
-    def delete(self, request):
+    def delete(self, request, user_id):
         # Check if the current user has the admin or superadmin role
-        if request.user.role not in ["admin", "superadmin"]:
+        if request.user.role != "superadmin":
             return Response(
                 {"error": "You are not authorized to delete users."},
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # Get the email from the request data
-        email = request.data.get("email")
-
-        # Check if email is provided
-        if not email:
-            return Response(
-                {"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Try to find the user with the provided email
+        # Try to find the user with the provided ID
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return Response(
                 {"error": "User not found."}, status=status.HTTP_404_NOT_FOUND
@@ -241,6 +232,17 @@ class AssetUpdateView(APIView):
             {"success": "Asset requested successfully and logged."},
             status=status.HTTP_200_OK,
         )
+#Delete an asset
+class AssetDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
+    def delete(self, request, asset_id):
+        if request.user.role != "superadmin":
+            return Response(
+                {"error": "You are not authorized to remove assets."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+            asset = get_object_or_404(Asset, id=asset_id)
+            asset.delete()
 
 
 """                                             REQUEST VIEWS"""
