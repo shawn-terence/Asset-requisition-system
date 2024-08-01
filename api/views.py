@@ -39,14 +39,14 @@ class UserLoginView(ObtainAuthToken):
             if not created:
                 token.delete()
                 token = Token.objects.create(user=user)
+            user_details=request.user
+            serializer=UserSerializer(user_details)
+            print(serializer.data)
+            message= {"message": "User logged in successfully"}
             response_data = {
-                "message": "User logged in successfully",
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "email": user.email,
-                "token": token.key,
-                "phone": user.phone_number,
-                "role": user.role,
+                "message":message,
+                "user":serializer.data,
+                "token":token.key
             }
             return Response(response_data, status=status.HTTP_200_OK)
         else:
