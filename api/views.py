@@ -337,5 +337,9 @@ class DeleteRequestView(APIView):
             return Response(
                 {"error": "Cannot delete an approved request."},
                 status=status.HTTP_400_BAD_REQUEST,)
+        asset = request_instance.asset
+        asset.status = False
+        asset.save()
+
         request_instance.delete()
         return Response({"success": "Request deleted successfully."}, status=status.HTTP_200_OK)

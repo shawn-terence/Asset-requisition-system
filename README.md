@@ -162,6 +162,7 @@ data.
 - `RequestListView`: Retrieves a list of all asset requests. No authentication required.
 - `RequestActionView`: Allows admins or superadmins to approve or reject requests. Updates the request status and adjusts the asset status accordingly. Requires the user to be authenticated (IsAuthenticated) and have an admin or superadmin role.
 - `EmployeeRequestListView` : Allows an employee who has mase requests be able to view them
-
+- `EmployeeAssets` : Allows an employee to see which assets have been allocated to them
+-  `DeleteRequestView`: Allows an employee to delete a request if it has not been approved
 ## Testing
  In order to test, run ``` python manage.py test api.tests```
