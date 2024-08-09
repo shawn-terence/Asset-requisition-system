@@ -13,6 +13,7 @@ urlpatterns = [
     path("user/changeRole/", ChangeUserRoleView.as_view(), name="change_role"),
     path('user/<int:user_id>/delete/', DeleteUserView.as_view(), name='delete_user'),
     path("user/allusers/", AllUsersView.as_view(), name="all_users"),
+    path("user/assets/", EmployeeAssets.as_view(), name="employee_assets"),
     path("assets/allassets/", AssetListView.as_view(), name="all_assets"),
     path(
         "assets/<int:asset_id>/request/",
@@ -25,4 +26,5 @@ urlpatterns = [
         "requests/<int:request_id>/", RequestActionView.as_view(), name="request_action"
     ),
     path("requests/user/", EmployeeRequestListView.as_view(), name="delete"),
+    path("requests/<int:request_id>/delete/", DeleteRequestView.as_view(), name="delete"),
 ]

@@ -244,8 +244,23 @@ class AssetDeleteView(APIView):
         asset = get_object_or_404(Asset, id=asset_id)
         asset.delete()
         return Response({"success": "Asset deleted successfully."}, status=status.HTTP_200_OK)
-
-
+#employee assets 
+class EmployeeAssets(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        
+        employee_id=user.id
+        print(employee_id)
+        user_request=get_object_or_404(Request,employee=employee_id)
+        serializer=RequestSerializer(user_request)
+        asset_data=serializer.data.get('asset',None)
+        asset_status=serializer.data.get('status')
+        if asset_status=='approved':
+            asset=asset_data
+            return Response(asset,status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "No assets have been allocated yet."},status=status.HTTP_400_BAD)
 """                                             REQUEST VIEWS"""
 
 
@@ -311,3 +326,16 @@ class EmployeeRequestListView(APIView):
         user_request=get_object_or_404(Request,employee=employee_id)
         serializer=RequestSerializer(user_request)
         return Response(serializer.data,status=status.HTTP_200_OK)
+#Employee deletes non approved requests
+class DeleteRequestView(APIView):
+    permission_classes = [IsAuthenticated]
+    def delete(self, request,request_id):
+        user = request.user
+        employee_id=user.id
+        request_instance = get_object_or_404(Request, id=request_id)
+        if request_instance.status == "approved":
+            return Response(
+                {"error": "Cannot delete an approved request."},
+                status=status.HTTP_400_BAD_REQUEST,)
+        request_instance.delete()
+        return Response({"success": "Request deleted successfully."}, status=status.HTTP_200_OK)
