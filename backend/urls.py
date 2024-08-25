@@ -25,6 +25,6 @@ urlpatterns = [
     path(
         "requests/<int:request_id>/", RequestActionView.as_view(), name="request_action"
     ),
-    path("requests/user/", EmployeeRequestListView.as_view(), name="delete"),
+    path("requests/user/", EmployeeRequestListView.as_view(), name="user_requests"),
     path("requests/<int:request_id>/delete/", DeleteRequestView.as_view(), name="delete"),
 ]

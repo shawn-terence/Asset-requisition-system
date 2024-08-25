@@ -319,6 +319,7 @@ class RequestActionView(APIView):
 class EmployeeRequestListView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
+        print(f"Auth Header: {request.headers.get('Authorization')}") 
         user = request.user
         
         employee_id=user.id
