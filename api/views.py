@@ -41,7 +41,6 @@ class UserLoginView(ObtainAuthToken):
                 token = Token.objects.create(user=user)
             user_details=request.user
             serializer=UserSerializer(user_details)
-            print(serializer.data)
             message= {"message": "User logged in successfully"}
             response_data = {
                 "message":message,
@@ -80,12 +79,7 @@ class UserUpdatePasswordView(APIView):
 
     def put(self, request):
         user = request.user
-        # current_password = request.data.get("current_password")
         password = request.data.get("password")
-        # if not check_password(current_password, user.password):
-        #     return Response(
-        #         {"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST
-        #     )
         if len(password) < 8:
             return Response(
                 {"error": "New password must be at least 8 characters long"},
@@ -247,20 +241,24 @@ class AssetDeleteView(APIView):
 #employee assets 
 class EmployeeAssets(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         user = request.user
+        employee_id = user.id
         
-        employee_id=user.id
-        print(employee_id)
-        user_request=get_object_or_404(Request,employee=employee_id)
-        serializer=RequestSerializer(user_request)
-        asset_data=serializer.data.get('asset',None)
-        asset_status=serializer.data.get('status')
-        if asset_status=='approved':
-            asset=asset_data
-            return Response(asset,status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "No assets have been allocated yet."},status=status.HTTP_400_BAD)
+        # Fetch the user request or return a 404 if not found
+        user_request = get_object_or_404(Request, employee=employee_id)
+        
+        # Serialize the request data
+        serializer = RequestSerializer(user_request)
+        asset_data = serializer.data.get('asset')
+        asset_status = serializer.data.get('status')
+
+        # Check if the asset status is approved
+        if asset_status == 'approved':
+            return Response(asset_data, status=status.HTTP_200_OK)
+        
+        return Response({"error": "No assets have been allocated yet."}, status=status.HTTP_400_BAD)
 """                                             REQUEST VIEWS"""
 
 
