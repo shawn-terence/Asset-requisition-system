@@ -316,15 +316,20 @@ class RequestActionView(APIView):
 # employee request list
 class EmployeeRequestListView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         print(f"Auth Header: {request.headers.get('Authorization')}") 
         user = request.user
-        
-        employee_id=user.id
-        
-        user_request=get_object_or_404(Request,employee=employee_id)
-        serializer=RequestSerializer(user_request)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        employee_id = user.id
+
+        # Get all requests for the employee, not just a single request
+        user_requests = Request.objects.filter(employee=employee_id)
+
+        # Serialize the queryset as a list
+        serializer = RequestSerializer(user_requests, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 #Employee deletes non approved requests
 class DeleteRequestView(APIView):
     permission_classes = [IsAuthenticated]

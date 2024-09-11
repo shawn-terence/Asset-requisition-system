@@ -4,6 +4,7 @@ from api.views import *
 
 urlpatterns = [
     path("user/register/", UserRegistrationView.as_view(), name="register"),
+    path("users/",AllUsersView.as_view(),name="all"),
     path("user/login/", UserLoginView.as_view(), name="login"),
     path("assets/add/", AssetAddView.as_view(), name="add_asset"),
     path(
