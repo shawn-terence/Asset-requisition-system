@@ -6,7 +6,7 @@ import cloudinary.api
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-yw5(*-xvw!mpp@_o=2h8-(y-=i1q+4$*5ydf73tx(xc_1c7wch"
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = "api.User"
