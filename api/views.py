@@ -18,6 +18,8 @@ User = get_user_model()
 
 
 # user registration
+
+#url(user/register)
 class UserRegistrationView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -28,6 +30,7 @@ class UserRegistrationView(APIView):
 
 
 # User log in view
+# url(user/login)
 class UserLoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         email = request.data.get("email")
@@ -56,6 +59,7 @@ class UserLoginView(ObtainAuthToken):
 
 
 # uSER dETAILS
+# url(user/userdetails)
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -66,6 +70,7 @@ class UserDetailView(APIView):
 
 
 # User list
+# url(user/all)
 class AllUsersView(APIView):
     def get(self, request):
         users = User.objects.all()
@@ -74,6 +79,7 @@ class AllUsersView(APIView):
 
 
 # User update password
+# url(user/updatepassword)
 class UserUpdatePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -94,6 +100,7 @@ class UserUpdatePasswordView(APIView):
 
 
 # Admin change employee role
+# url(user/changerole)
 class ChangeUserRoleView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -134,6 +141,7 @@ class ChangeUserRoleView(APIView):
 
 
 # delete a user from the database
+# url(user/id/delete)
 class DeleteUserView(APIView):
     # Only authenticated users can access this view
     permission_classes = [IsAuthenticated]
@@ -165,7 +173,7 @@ class DeleteUserView(APIView):
     """                                     ASSET VIEWS                                                                     """
     # Add asset
 
-
+#url(asset/add/)
 class AssetAddView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -185,6 +193,7 @@ class AssetAddView(APIView):
 
 
 # get all assets
+#url(assets/allassets/)
 class AssetListView(APIView):
     def get(self, request):
 
@@ -194,6 +203,7 @@ class AssetListView(APIView):
 
 
 # request for asset
+#url(assets/<id>/request/)
 class AssetUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -227,6 +237,7 @@ class AssetUpdateView(APIView):
             status=status.HTTP_200_OK,
         )
 #Delete an asset
+#url(assets/id/delete)
 class AssetDeleteView(APIView):
     permission_classes = [IsAuthenticated]
     def delete(self, request, asset_id):
@@ -239,6 +250,7 @@ class AssetDeleteView(APIView):
         asset.delete()
         return Response({"success": "Asset deleted successfully."}, status=status.HTTP_200_OK)
 #employee assets 
+#url(user/assets/)
 class EmployeeAssets(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -318,7 +330,6 @@ class EmployeeRequestListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        print(f"Auth Header: {request.headers.get('Authorization')}") 
         user = request.user
         employee_id = user.id
 

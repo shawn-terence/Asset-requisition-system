@@ -37,8 +37,8 @@ class Command(BaseCommand):
         )
 
         admin2 = User.objects.create_user(
-            email="admin2@example.com",
-            first_name="Admin",
+            email="Johndoe@example.com",
+            first_name="John",
             last_name="Two",
             phone_number="1234567892",
             department="HR",
@@ -47,8 +47,8 @@ class Command(BaseCommand):
         )
 
         employee1 = User.objects.create_user(
-            email="employee1@example.com",
-            first_name="Employee",
+            email="Pete@example.com",
+            first_name="Pete",
             last_name="One",
             phone_number="1234567893",
             department="Finance",
