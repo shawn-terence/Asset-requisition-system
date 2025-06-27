@@ -28,7 +28,6 @@ class UserRegistrationView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 # User log in view
 # url(user/login)
 class UserLoginView(ObtainAuthToken):
@@ -292,6 +291,10 @@ class RequestListView(APIView):
         serializer = RequestSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class Booter(APIView):
+    def get(self,request):
+        message="heloo"
+        return Response(message,status=status.HTTP_200_OK)
 
 # request action(accept or deny)
 class RequestActionView(APIView):
