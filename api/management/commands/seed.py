@@ -88,18 +88,120 @@ class Command(BaseCommand):
 
         # Create assets
         self.stdout.write("Creating new assets...")
+        # assets = [
+        #     {"name": "Laptop", "description": "A powerful laptop", "category": "Electronics", "serial_number": "SN123456", "tag": "IT", "status": True, "asset_type": "Device"},
+        #     {"name": "Projector", "description": "A high-resolution projector", "category": "Electronics", "serial_number": "SN123457", "tag": "AV", "status": True, "asset_type": "Device"},
+        #     {"name": "Desk Chair", "description": "An ergonomic desk chair", "category": "Furniture", "serial_number": "SN123458", "tag": "Office", "status": True, "asset_type": "Furniture"},
+        #     {"name": "Monitor", "description": "A 4K UHD monitor", "category": "Electronics", "serial_number": "SN123459", "tag": "IT", "status": True, "asset_type": "Device"},
+        #     {"name": "Keyboard", "description": "Mechanical keyboard", "category": "Electronics", "serial_number": "SN123460", "tag": "IT", "status": True, "asset_type": "Device"},
+        #     {"name": "Desk", "description": "A large wooden desk", "category": "Furniture", "serial_number": "SN123461", "tag": "Office", "status": True, "asset_type": "Furniture"},
+        #     {"name": "Office Chair", "description": "Comfortable office chair", "category": "Furniture", "serial_number": "SN123462", "tag": "Office", "status": True, "asset_type": "Furniture"},
+        #     {"name": "Printer", "description": "Laser printer", "category": "Electronics", "serial_number": "SN123463", "tag": "IT", "status": True, "asset_type": "Device"},
+        #     {"name": "Tablet", "description": "A high-performance tablet", "category": "Electronics", "serial_number": "SN123464", "tag": "IT", "status": True, "asset_type": "Device"},
+        #     {"name": "Headphones", "description": "Noise-cancelling headphones", "category": "Electronics", "serial_number": "SN123465", "tag": "AV", "status": True, "asset_type": "Device"},
+        # ]
         assets = [
-            {"name": "Laptop", "description": "A powerful laptop", "category": "Electronics", "serial_number": "SN123456", "tag": "IT", "status": True, "asset_type": "Device"},
-            {"name": "Projector", "description": "A high-resolution projector", "category": "Electronics", "serial_number": "SN123457", "tag": "AV", "status": True, "asset_type": "Device"},
-            {"name": "Desk Chair", "description": "An ergonomic desk chair", "category": "Furniture", "serial_number": "SN123458", "tag": "Office", "status": True, "asset_type": "Furniture"},
-            {"name": "Monitor", "description": "A 4K UHD monitor", "category": "Electronics", "serial_number": "SN123459", "tag": "IT", "status": True, "asset_type": "Device"},
-            {"name": "Keyboard", "description": "Mechanical keyboard", "category": "Electronics", "serial_number": "SN123460", "tag": "IT", "status": True, "asset_type": "Device"},
-            {"name": "Desk", "description": "A large wooden desk", "category": "Furniture", "serial_number": "SN123461", "tag": "Office", "status": True, "asset_type": "Furniture"},
-            {"name": "Office Chair", "description": "Comfortable office chair", "category": "Furniture", "serial_number": "SN123462", "tag": "Office", "status": True, "asset_type": "Furniture"},
-            {"name": "Printer", "description": "Laser printer", "category": "Electronics", "serial_number": "SN123463", "tag": "IT", "status": True, "asset_type": "Device"},
-            {"name": "Tablet", "description": "A high-performance tablet", "category": "Electronics", "serial_number": "SN123464", "tag": "IT", "status": True, "asset_type": "Device"},
-            {"name": "Headphones", "description": "Noise-cancelling headphones", "category": "Electronics", "serial_number": "SN123465", "tag": "AV", "status": True, "asset_type": "Device"},
-        ]
+                {
+                    "name": "Laptop",
+                    "description": "Intel Core i7 processor, 16GB RAM, 512GB SSD, 15.6-inch Full HD display",
+                    "category": "Electronics",
+                    "serial_number": "SN123456",
+                    "tag": "IT",
+                    "status": True,
+                    "asset_type": "Computing Device",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632498/open-laptop_144627-12148_psdxwk.jpg"
+                },
+                {
+                    "name": "Projector",
+                    "description": "4000 lumens brightness, 1080p resolution, 1.2-1.5 zoom lens",
+                    "category": "Electronics",
+                    "serial_number": "SN123457",
+                    "tag": "AV",
+                    "status": True,
+                    "asset_type": "Visual Display",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632532/projector_enpi3j.avif"
+                },
+                {
+                    "name": "Desk Chair",
+                    "description": "Adjustable height (18-22 inches), lumbar support, breathable mesh back",
+                    "category": "Furniture",
+                    "serial_number": "SN123458",
+                    "tag": "Office",
+                    "status": True,
+                    "asset_type": "Seating",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632485/office-chair-still-life_23-2151149132_keg49b.jpg"
+                },
+                {
+                    "name": "Monitor",
+                    "description": "32-inch 4K UHD, 3840x2160 resolution, HDR support, 60Hz refresh rate",
+                    "category": "Electronics",
+                    "serial_number": "SN123459",
+                    "tag": "IT",
+                    "status": True,
+                    "asset_type": "Display Device",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632280/3cb2fd73d55747db5675a293dc8fcba1-qm24dfi-foto01_tzy8cp.jpg"
+                },
+                {
+                    "name": "Keyboard",
+                    "description": "Mechanical switches, RGB backlighting, USB connectivity, 104-key layout",
+                    "category": "Electronics",
+                    "serial_number": "SN123460",
+                    "tag": "IT",
+                    "status": True,
+                    "asset_type": "Input Device",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632562/wireless-mouse-keyboard_1260-15_jj31su.jpg"
+                },
+                {
+                    "name": "Desk",
+                    "description": "Large wooden desk, dimensions 60x30 inches, with cable management system",
+                    "category": "Furniture",
+                    "serial_number": "SN123461",
+                    "tag": "Office",
+                    "status": True,
+                    "asset_type": "Office Furniture",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632472/desk_ylkwxv.webp"
+                },
+                {
+                    "name": "Office Chair",
+                    "description": "Ergonomic office chair, adjustable seat height (16-21 inches), swivel base",
+                    "category": "Furniture",
+                    "serial_number": "SN123462",
+                    "tag": "Office",
+                    "status": True,
+                    "asset_type": "Seating",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632462/chair_oip9la.jpg"
+                },
+                {
+                    "name": "Printer",
+                    "description": "Laser printer, print speed 35 ppm, automatic duplex printing, USB and Wi-Fi",
+                    "category": "Electronics",
+                    "serial_number": "SN123463",
+                    "tag": "IT",
+                    "status": True,
+                    "asset_type": "Output Device",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632516/printer-with-white-sheets_1232-570_l52ui5.jpg"
+                },
+                {
+                    "name": "Tablet",
+                    "description": "10.5-inch display, 128GB storage, 8GB RAM, A12 Bionic chip",
+                    "category": "Electronics",
+                    "serial_number": "SN123464",
+                    "tag": "IT",
+                    "status": True,
+                    "asset_type": "Portable Device",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632546/tablet-mockup_1017-7628_zxncfy.jpg"
+                },
+                {
+                    "name": "Headphones",
+                    "description": "Over-ear noise-cancelling headphones, 20 hours battery life, Bluetooth 5.0",
+                    "category": "Electronics",
+                    "serial_number": "SN123465",
+                    "tag": "AV",
+                    "status": True,
+                    "asset_type": "Audio Equipment",
+                    "image": "https://res.cloudinary.com/dcqpver8i/image/upload/v1737632442/black-headphones-digital-device_53876-96805_q1a8km.jpg"
+                }
+            ]
 
         for asset_data in assets:
             Asset.objects.create(**asset_data)

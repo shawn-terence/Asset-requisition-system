@@ -1,3 +1,4 @@
+#models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
@@ -57,7 +58,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    profile_picture = CloudinaryField("image")
+    profile_picture = CloudinaryField("image",blank=True)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=30)
     department = models.CharField(max_length=30)
@@ -76,9 +77,8 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-
 class Asset(models.Model):
-    image = CloudinaryField("image")
+    image = CloudinaryField("image",blank=True)
     name = models.CharField(max_length=30)
     description = models.TextField()
     category = models.CharField(max_length=30)

@@ -35,6 +35,7 @@ class UserLoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         email = request.data.get("email")
         password = request.data.get("password")
+        print(email)
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
@@ -54,7 +55,7 @@ class UserLoginView(ObtainAuthToken):
         else:
             return Response(
                 {"error": "Invalid email and/or password"},
-                status=status.HTTP_401_UNAUTHORIZED,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
@@ -192,14 +193,14 @@ class AssetAddView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# get all assets
-#url(assets/allassets/)
+#get all Assets
 class AssetListView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
+        assets = Asset.objects.filter(status=True)
+        serializer=AssetSerializer(assets,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
-        assets = Asset.objects.all()
-        serializer = AssetSerializer(assets, many=True)
-        return Response(serializer.data)
 
 
 # request for asset
@@ -257,25 +258,35 @@ class EmployeeAssets(APIView):
     def get(self, request):
         user = request.user
         employee_id = user.id
-        
-        # Fetch the user request or return a 404 if not found
-        user_request = get_object_or_404(Request, employee=employee_id)
-        
-        # Serialize the request data
-        serializer = RequestSerializer(user_request)
-        asset_data = serializer.data.get('asset')
-        asset_status = serializer.data.get('status')
 
-        # Check if the asset status is approved
-        if asset_status == 'approved':
-            return Response(asset_data, status=status.HTTP_200_OK)
-        
-        return Response({"error": "No assets have been allocated yet."}, status=status.HTTP_400_BAD)
-"""                                             REQUEST VIEWS"""
+        # Fetch all requests for the authenticated employee
+        user_requests = Request.objects.filter(employee__id=employee_id)
+
+        # Check if no requests are found
+        if not user_requests.exists():
+            return Response({"error": "No assets have been allocated yet."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Serialize the requests data
+        serializer = RequestSerializer(user_requests, many=True)
+
+        # Filter approved assets
+        approved_assets = []
+        for request_data in serializer.data:
+            if request_data.get('status') == 'approved':
+                asset_data = request_data.get('asset')
+                if asset_data:
+                    approved_assets.append(asset_data)
+
+        # Return approved assets if any, else return an error
+        if approved_assets:
+            return Response(approved_assets, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "No approved assets found."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # request list
 class RequestListView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         requests = Request.objects.all()
         serializer = RequestSerializer(requests, many=True)
@@ -353,7 +364,7 @@ class DeleteRequestView(APIView):
                 {"error": "Cannot delete an approved request."},
                 status=status.HTTP_400_BAD_REQUEST,)
         asset = request_instance.asset
-        asset.status = False
+        asset.status = True
         asset.save()
 
         request_instance.delete()

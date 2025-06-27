@@ -1,9 +1,10 @@
+#Serializer.py
 from rest_framework import serializers
 from .models import User, Asset, Request
-from rest_framework.serializers import SerializerMethodField
+from rest_framework.serializers import ModelSerializer,SerializerMethodField
 import cloudinary
 # user serializer
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = [
@@ -24,13 +25,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 # asset serializer
-class AssetSerializer(serializers.ModelSerializer):
+class AssetSerializer(ModelSerializer):
     image_url=SerializerMethodField()
     class Meta:
         model = Asset
         fields = [
             "id",
-            "image",
+            "image_url",
             "name",
             "description",
             "category",
@@ -43,14 +44,13 @@ class AssetSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         asset = Asset.objects.create(**validated_data)
         return asset
-    def get_image_url(self,obj):
+    def get_image_url(self, obj):
         if obj.image:
-            return f"https://res.cloudinary.com/{cloudinary.config().cloud_name}/{obj.image}"
+            return obj.image.url  # Use Cloudinary's URL property
         return None
 
-
 # request serializer
-class RequestSerializer(serializers.ModelSerializer):
+class RequestSerializer(ModelSerializer):
     asset = AssetSerializer()
     employee = UserSerializer()
 
